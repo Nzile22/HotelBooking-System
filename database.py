@@ -1,20 +1,19 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, declarative_base
 from models.base import Base
-from models.hotel import Hotel
-from models.booking import Booking
+from models.Hotel import Hotel
+from models.Booking import Booking
 
 
 # SQLite database setup
 DATABASE_URL = "sqlite:///hotel_bookings.db"
 engine = create_engine(DATABASE_URL)
 SessionLocal = sessionmaker(bind=engine)
-session = session()
+session = SessionLocal()
 
 Base = declarative_base()
 
-def create_tables():
-    Base.metadata.create_all(bind=engine)
+# Removed the create_tables function as Alembic will manage schema changes
 
 
 def create_tables():
