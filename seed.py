@@ -1,29 +1,51 @@
-from database import session
-from models.Hotel import Hotel
-from models.Booking import Booking
+from faker import Faker
+from models import Hotel, Booking
+from sqlalchemy.orm import sessionmaker
+from sqlalchemy import create_engine
+import random
 
-# Sample data for hotels
-hotels = [
-    {"name": "Hotel California", "location": "Los Angeles"},
-    {"name": "The Grand Budapest Hotel", "location": "Budapest"},
-    {"name": "The Ritz", "location": "Paris"},
-]
+my_engine = create_engine("sqlite:///hotel_bookings.db")
+session_inst = sessionmaker(bind=my_engine)
+my_session = session_inst()
 
-# Sample data for bookings
-bookings = [
-    {"guest_name": "John Doe", "hotel_id": 1},
-    {"guest_name": "Jane Smith", "hotel_id": 2},
-    {"guest_name": "Alice Johnson", "hotel_id": 1},
-]
+fake = Faker()
 
-def seed_data():
-    # Seed hotels
-    for hotel in hotels:
-        Hotel.create(session, hotel["name"], hotel["location"])
+print("Start Seeding Hotels")
+hotel_list = []
+for i in range(10):
+    new_hotel = Hotel(name=fake.name(), location=fake.address())
+    hotel_list.append(new_hotel)
+try:
+    my_session.add_all(hotel_list)
+    my_session.commit()
+    print("Hotel seeded successfully")
     
-    # Seed bookings
-    for booking in bookings:
-        Booking.create(session, booking["guest_name"], booking["hotel_id"])
+    print("Start Seeding Bookings")
+    booking_list = []
+    for i in range(10):
+        new_booking = Booking(guest_name=fake.name(), hotel_id=random.randint(1, 10))
+        booking_list.append(new_booking)
+    my_session.add_all(booking_list)
+    my_session.commit()
+    print("Bookings seeded successfully")
+except Exception as e:
+    print(f"An error occurred: {e}")
+my_session.commit()
+print("Hotel seeded successfully")
 
-if __name__ == "__main__":
-    seed_data()
+
+print("Start Seeding Bookings")
+booking_list = []
+for i in range(10):
+    new_booking = Booking(guest_name=fake.name(), hotel_id=random.randint(1, 10))
+    booking_list.append(new_booking)
+try:
+    my_session.add_all(booking_list)
+    my_session.commit()
+    print("Booking seeded successfully")
+except Exception as e:
+    print(f"An error occurred: {e}")
+    my_session.commit()
+    print("Booking seeded successfully")
+    my_session.commit()
+    print("Booking seeded successfully")  # Removed the extra print statement
