@@ -47,5 +47,4 @@ except Exception as e:
     print(f"An error occurred: {e}")
     my_session.commit()
     print("Booking seeded successfully")
-    my_session.commit()
-    print("Booking seeded successfully")  # Removed the extra print statement
+   
